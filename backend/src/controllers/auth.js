@@ -22,10 +22,10 @@ const login = async (req, res) => {
       userResults.hash
     );
     if (!passwordResults) {
-      console.log("login unsuccessful");
+      console.log("email or password is incorrect");
       return res
         .status(400)
-        .json({ status: "error", msg: "login unsuccessful" });
+        .json({ status: "error", msg: "email or password is incorrect" });
     }
 
     const claims = {

@@ -5,6 +5,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const authRouter = require("./src/routers/auth");
+const sessionsRouter = require("./src/routers/sessions");
+const adminRouter = require("./src/routers/admin");
 
 const app = express();
 
@@ -22,6 +24,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/auth", authRouter);
+
+app.use("/api", sessionsRouter);
+
+app.use("/admin", adminRouter);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

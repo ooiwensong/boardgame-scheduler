@@ -1,0 +1,17 @@
+delete from sessions;
+
+insert into sessions(uuid, host_id, game_title, max_guests, date, start_time, end_time, address, game_image)
+values
+	('e3712459-73c5-4b87-ae80-d2bb8aff4ea3', 'ec407641-fbca-4713-abfb-c8dca7c67dc4', 'Oath: Chronicles of Empire & Exile', 4, '2023-12-25', '20:00', '22:00', 'Gek Poh Community Centre', 'https://cf.geekdo-images.com/gTxav_KKQK1rDg-XuCjCSA__itemrep/img/tSLVt-2CpBBSd3UUPWa4zuxc34k=/fit-in/246x300/filters:strip_icc()/pic5164812.jpg'),
+	('ed90f9e5-58d0-4533-9d9c-b5a11d81395c', 'ec407641-fbca-4713-abfb-c8dca7c67dc4', 'Dune: Imperium', 3, '2023-12-30', '20:00', '22:00', 'Gek Poh Community Centre', 'https://cf.geekdo-images.com/PhjygpWSo-0labGrPBMyyg__itemrep/img/3_xJ0tO5L62bUp2oRfjeVS0DHX0=/fit-in/246x300/filters:strip_icc()/pic5666597.jpg'),
+	('612fb583-a096-449a-a322-c5ccbb00b473', '0375fa48-c0c8-416d-bb7d-f711ae79aaa6', 'John Company: 2nd Edition', 4, '2023-12-21', '20:00', '22:30', 'Clementi Mall', 'https://cf.geekdo-images.com/TAdE4z_bwAAjJlmPrkmKhA__itemrep/img/jfoPC6IiaYDSmI6i0jAS756hDlI=/fit-in/246x300/filters:strip_icc()/pic6601629.jpg'),
+	('74500740-7569-4c12-b89b-09655cd5f7a7', '0375fa48-c0c8-416d-bb7d-f711ae79aaa6', 'Castles of Burgundy', 2, '2023-12-26', '20:00', '22:30', 'Clementi Mall', 'https://cf.geekdo-images.com/VrNrk7XVU1hN0j1ZFhjcjw__itemrep/img/W-5lYNeqk2CTuaPFs3yvfPL3J14=/fit-in/246x300/filters:strip_icc()/pic4934938.jpg'),
+	('f1164bf2-282d-4989-8052-f353a6b892fb', '0375fa48-c0c8-416d-bb7d-f711ae79aaa6', 'Azul', 1, '2023-12-20', '20:00', '22:30', 'Clementi Mall', 'https://cf.geekdo-images.com/aPSHJO0d0XOpQR5X-wJonw__itemrep/img/6oRLPDvy4zz3gOZM6e6NzIk8Seg=/fit-in/246x300/filters:strip_icc()/pic6973671.png'),
+	('83717559-bf16-400e-a46c-45131745c95e', '95834b54-3835-4ffe-a231-0d90a458ec8d', 'Gaia Project', 3, '2024-01-05', '09:00', '11:30', 'Ang Mo Kio Hub', 'https://cf.geekdo-images.com/hGWFm3hbMlCDsfCsauOQ4g__itemrep/img/MNyaVUlEsVQmbv3nObPl0SEd_TI=/fit-in/246x300/filters:strip_icc()/pic5375625.png'),
+	('c03bd7b2-96d2-469e-b2a3-aaca42db54de', '95834b54-3835-4ffe-a231-0d90a458ec8d', 'On Mars', 3, '2024-01-10', '18:00', '20:30', 'Ang Mo Kio Hub', 'https://cf.geekdo-images.com/Nm0Iw8NoiM9V8IsifimGBw__itemrep/img/xTjuZwi_7iS6FpZIISWTk7SAZ5o=/fit-in/246x300/filters:strip_icc()/pic4357658.jpg'),
+	('e2acb505-8ae5-4d2d-9ae4-f9dfb3c6e412', '95834b54-3835-4ffe-a231-0d90a458ec8d', 'Lisboa', 3, '2024-01-11', '18:00', '20:30', 'Ang Mo Kio Hub', 'https://cf.geekdo-images.com/OrHS8_a1CqSGiXeTfCk0Wg__itemrep/img/3OmJPCYr0wEQQD5dIgW9YxY5hxQ=/fit-in/246x300/filters:strip_icc()/pic3209553.jpg'),
+	('d5e3ddbd-f461-4170-b83b-22644f80bb03', '1b0f1bf8-09c1-4a59-a75a-efd1b44c2246', 'Viticulture', 3, '2024-01-11', '18:00', '20:30', 'One Tampines Hub', 'https://cf.geekdo-images.com/WrnWFA1Sysm3-nQyBe1sUA__itemrep/img/c3Gex8FN8UwHHIChBqf1jUE-SWk=/fit-in/246x300/filters:strip_icc()/pic2619743.jpg'),
+	('28b88c9a-bec6-4b81-8854-25271510cc46', '1b0f1bf8-09c1-4a59-a75a-efd1b44c2246', 'The Crew: The Quest for Planet Nine', 4, '2024-01-20', '18:00', '19:30', 'One Tampines Hub', 'https://cf.geekdo-images.com/98LnQShydr11OBKS46xY-Q__itemrep/img/etVRTXdF6IDsnGKQe77FRFP4H7M=/fit-in/246x300/filters:strip_icc()/pic5687013.jpg');
+	
+	
+select * from sessions;
