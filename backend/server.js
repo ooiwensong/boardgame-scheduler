@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const authRouter = require("./src/routers/auth");
 const sessionsRouter = require("./src/routers/sessions");
+const profilesRouter = require("./src/routers/profiles");
 const adminRouter = require("./src/routers/admin");
 
 const app = express();
@@ -25,7 +26,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/auth", authRouter);
 
-app.use("/api", sessionsRouter);
+app.use("/api/sessions", sessionsRouter);
+app.use("/api/profiles", profilesRouter);
 
 app.use("/admin", adminRouter);
 
