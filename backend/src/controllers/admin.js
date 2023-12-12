@@ -13,9 +13,13 @@ const getAllUsers = async (req, res) => {
 
 const updateUserRole = async (req, res) => {
   try {
-    const updateUserRoleText = "UPDATE users SET role=$1 WHERE uuid=$2";
-    const updateUserRoleValues = [req.body.role, req.body.userId];
-    await db.query(updateUserRoleText, updateUserRoleValues);
+    await db.query(
+      `
+    UPDATE users
+    SET role=$1
+    WHERE uuid=$2`,
+      [req.body.role, req.body.userId]
+    );
 
     res.json({ status: "ok", msg: "user role updated successfully" });
   } catch (error) {
