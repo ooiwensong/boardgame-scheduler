@@ -84,7 +84,6 @@ const getMySessions = async (req, res) => {
 
     const mySessions = [];
     for (const session of hostSessions.rows) {
-      console.log(session);
       mySessions.push(session);
     }
     for (const session of guestSessions.rows) {
@@ -190,18 +189,39 @@ const deleteSession = async (req, res) => {
 
 // Join a session hosted by another user
 const joinSession = async (req, res) => {
+  const client = await db.connect();
   try {
-    await db.query(
+    await client.query("BEGIN");
+
+    const { rows } = await client.query(
+      `
+    SELECT is_full
+    FROM sessions
+    WHERE uuid=$1`,
+      [req.body.sessionId]
+    );
+    if (rows[0].is_full) {
+      return res
+        .status(400)
+        .json({ status: "error", msg: "unable to join session as it is full" });
+    }
+
+    await client.query(
       `
     INSERT INTO guests (session_id, guest_id)
     VALUES ($1, $2)`,
       [req.body.sessionId, req.body.userId]
     );
 
+    await client.query("COMMIT");
+
     res.json({ status: "ok", msg: "session joined successfully" });
   } catch (error) {
+    await client.query("ROLLBACK");
     console.log(error.message);
     res.status(400).json({ status: "error", msg: "error joining session" });
+  } finally {
+    client.release();
   }
 };
 
