@@ -4,9 +4,13 @@ const jwt = require("jsonwebtoken");
 
 const login = async (req, res) => {
   try {
-    const { rows } = await db.query("SELECT * FROM users WHERE email = $1", [
-      req.body.email,
-    ]);
+    const { rows } = await db.query(
+      `
+    SELECT *
+    FROM users
+    WHERE email = $1`,
+      [req.body.email]
+    );
 
     const [userResults] = rows;
 
@@ -51,9 +55,13 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   try {
-    const { rows } = await db.query("SELECT * FROM users WHERE email = $1", [
-      req.body.email,
-    ]);
+    const { rows } = await db.query(
+      `
+    SELECT * 
+    FROM users 
+    WHERE email = $1`,
+      [req.body.email]
+    );
 
     [userResults] = rows;
 
@@ -63,9 +71,12 @@ const register = async (req, res) => {
         .json({ status: "error", msg: "email already exists" });
 
     const hash = await bcrypt.hash(req.body.password, 12);
-    const createUserText = "INSERT INTO users (email, hash) VALUES ($1, $2)";
-    const createUserValues = [req.body.email, hash];
-    await db.query(createUserText, createUserValues);
+    await db.query(
+      `
+    INSERT INTO users (email, hash, username)
+    VALUES ($1, $2, $3)`,
+      [req.body.email, hash, req.body.username]
+    );
 
     res.json({ status: "ok", msg: "user created successfully" });
   } catch (error) {
