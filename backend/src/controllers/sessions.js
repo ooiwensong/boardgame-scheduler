@@ -57,46 +57,24 @@ const getMyHostSessions = async (req, res) => {
 
 // Get information about sessions a user is hosting and/or has joined
 const getMySessions = async (req, res) => {
-  const client = await db.connect();
   try {
-    await client.query("BEGIN");
-
-    const hostSessions = await client.query(
+    const mySessions = await db.query(
       `
     SELECT *
     FROM sessions
     WHERE host_id=$1
-    ORDER BY date, start_time`,
-      [req.body.userId]
-    );
-
-    const guestSessions = await client.query(
-      `
+    UNION
     SELECT uuid, host_id, game_title, max_guests, num_guests, date, start_time, end_time, address, is_full, expires_at, created_at, last_updated, game_image
     FROM sessions
     JOIN guests ON guests.session_id = sessions.uuid
-    WHERE host_id != $1
+    WHERE guest_id=$2
     ORDER BY date, start_time`,
-      [req.body.userId]
+      [req.body.userId, req.body.userId]
     );
-
-    await client.query("COMMIT");
-
-    const mySessions = [];
-    for (const session of hostSessions.rows) {
-      mySessions.push(session);
-    }
-    for (const session of guestSessions.rows) {
-      mySessions.push(session);
-    }
-
-    res.json(mySessions);
+    res.json(mySessions.rows);
   } catch (error) {
-    await client.query("ROLLBACK");
     console.log(error.message);
     res.status(400).json({ status: "error", msg: "error retrieving sessions" });
-  } finally {
-    client.release();
   }
 };
 
@@ -192,6 +170,20 @@ const joinSession = async (req, res) => {
   const client = await db.connect();
   try {
     await client.query("BEGIN");
+
+    const host = await client.query(
+      `
+    SELECT host_id
+    FROM sessions
+    WHERE uuid=$1`,
+      [req.body.sessionId]
+    );
+    if (host.rows[0].host_id === req.body.userId) {
+      return res.status(400).json({
+        status: "error",
+        msg: "cannot join a session you are hosting",
+      });
+    }
 
     const { rows } = await client.query(
       `

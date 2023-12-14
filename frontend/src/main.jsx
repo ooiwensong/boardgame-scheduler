@@ -6,6 +6,7 @@ import "./index.css";
 import Root from "./routes/Root.jsx";
 import Login from "./routes/Login.jsx";
 import Register from "./routes/Register.jsx";
+import Index from "./routes/Index.jsx";
 import { action as loginAction } from "./routes/Login.jsx";
 import { action as registerAction } from "./routes/Register.jsx";
 import { loader as rootLoader } from "./routes/Root.jsx";
@@ -14,11 +15,12 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    id: "root",
     loader: rootLoader,
     children: [
       {
         index: true,
-        element: <h1>Home</h1>,
+        element: <Index />,
       },
       {
         path: "find-session",
