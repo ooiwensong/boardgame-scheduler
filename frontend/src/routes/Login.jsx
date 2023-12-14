@@ -17,7 +17,7 @@ export const action = async ({ request }) => {
     const loginData = Object.fromEntries(await request.formData());
     const res = await loginUser(loginData);
     if (res.status === "ok") {
-      return redirect("/home");
+      return redirect("/");
     } else {
       console.log(res.msg);
     }
