@@ -33,7 +33,7 @@ const login = async (req, res) => {
     }
 
     const claims = {
-      id: userResults.id,
+      userId: userResults.uuid,
       email: userResults.email,
       role: userResults.role,
       username: userResults.username,
@@ -91,7 +91,7 @@ const refresh = async (req, res) => {
     const decoded = jwt.decode(req.body.refresh, process.env.REFRESH_SECRET);
 
     const claims = {
-      id: decoded.id,
+      userId: decoded.userId,
       email: decoded.email,
       role: decoded.role,
       username: decoded.username,
