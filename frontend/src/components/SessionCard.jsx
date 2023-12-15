@@ -7,33 +7,39 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import useFormatDateTime from "@/hooks/useFormatDateTime";
 import { useRouteLoaderData } from "react-router-dom";
 import {
+  ArrowLeftFromLine,
+  ArrowRightToLine,
   CalendarDays,
   Clock3,
+  Delete,
   MapPin,
   MoreVertical,
+  PencilIcon,
   PuzzleIcon,
 } from "lucide-react";
 import clsx from "clsx";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const SessionCard = (props) => {
   const { session } = props;
   const { userCtx } = useRouteLoaderData("root");
   const formatted = useFormatDateTime(session);
-  const [isHost, setIsHost] = useState(false);
-  const [isFull, setIsFull] = useState(false);
-
-  useEffect(() => {
-    if (session.host_id === userCtx.userId) setIsHost(true);
-    if (session.is_full) setIsFull(true);
-  }, []);
+  const isHost = session.host_id === userCtx.userId;
+  const isGuest = session.guests.includes(userCtx.userId);
 
   return (
     <Card
-      className={`mt-5 border-white shadow-md ${clsx({
+      className={`mt-5 border-0 pt-1 shadow-md ${clsx({
         "bg-orange-100": isHost,
         "bg-orange-50": !isHost,
       })}`}
@@ -69,13 +75,45 @@ const SessionCard = (props) => {
             </p>
           </div>
           <div className="ml-auto">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hover:bg-orange-200 active:bg-orange-300"
-            >
-              <MoreVertical className="text-orange-600" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hover:bg-orange-200 focus:ring-0 active:bg-orange-300"
+                >
+                  <MoreVertical className="text-orange-600" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {isHost && (
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <PencilIcon className="mr-2 h-4 w-4" /> Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Delete className="mr-2 h-4 w-4" /> Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                )}
+                {!isHost && (
+                  <DropdownMenuGroup>
+                    {!isGuest && (
+                      <DropdownMenuItem>
+                        <ArrowRightToLine className="mr-2 h-4 w-4" /> Join
+                        session
+                      </DropdownMenuItem>
+                    )}
+                    {isGuest && (
+                      <DropdownMenuItem>
+                        <ArrowLeftFromLine className="mr-2 h-4 w-4" /> Leave
+                        session
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuGroup>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </CardContent>

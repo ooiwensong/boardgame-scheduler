@@ -60,15 +60,12 @@ const getMySessions = async (req, res) => {
   try {
     const mySessions = await db.query(
       `
-    SELECT *
-    FROM sessions
-    WHERE host_id=$1
-    UNION
-    SELECT uuid, host_id, game_title, max_guests, num_guests, date, start_time, end_time, address, is_full, expires_at, created_at, last_updated, game_image
-    FROM sessions
-    JOIN guests ON guests.session_id = sessions.uuid
-    WHERE guest_id=$2
-    ORDER BY date, start_time`,
+      SELECT s.uuid, s.host_id, s.game_title, s.max_guests, s.num_guests, s.date, s.start_time, s.end_time, s.address, s.is_full, s.expires_at, s.created_at, s.last_updated, s.game_image, array_agg(guests.guest_id) "guests"
+      FROM sessions AS s
+      FULL JOIN guests ON s.uuid = guests.session_id
+      WHERE host_id=$1 OR guest_id=$2
+      GROUP BY s.uuid
+      ORDER BY date, start_time`,
       [req.body.userId, req.body.userId]
     );
     res.json(mySessions.rows);
@@ -78,13 +75,17 @@ const getMySessions = async (req, res) => {
   }
 };
 
+// Get information about sessions hosted by other users
 const getOtherUserSessions = async (req, res) => {
   try {
     const sessions = await db.query(
       `
-    SELECT *
-    FROM sessions
-    WHERE host_id != $1`,
+      SELECT s.uuid, s.host_id, s.game_title, s.max_guests, s.num_guests, s.date, s.start_time, s.end_time, s.address, s.is_full, s.expires_at, s.created_at, s.last_updated, s.game_image, array_agg(guests.guest_id) "guests"
+      FROM sessions as s
+      FULL JOIN guests ON s.uuid = guests.session_id
+      WHERE host_id !=$1
+      GROUP BY s.uuid
+      ORDER BY date, start_time`,
       [req.body.userId]
     );
 
