@@ -10,6 +10,7 @@ import Index from "./routes/Index.jsx";
 import { action as loginAction } from "./routes/Login.jsx";
 import { action as registerAction } from "./routes/Register.jsx";
 import { loader as rootLoader } from "./routes/Root.jsx";
+import FindSessions from "./routes/FindSessions.jsx"; // loader as findSessionsLoader,
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
       },
       {
         path: "find-session",
-        element: <h1>Find a Session</h1>,
+        element: <FindSessions />,
       },
       {
         path: "profile/:userId",

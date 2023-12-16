@@ -1,8 +1,15 @@
 import React, { useEffect } from "react";
 import { HomeIcon, PlusCircleIcon, SearchIcon } from "lucide-react";
-import { Outlet, redirect, useLoaderData, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Outlet,
+  redirect,
+  useLoaderData,
+  useNavigate,
+} from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { getMySessions } from "@/sessions";
+import { Toaster } from "@/components/ui/toaster";
 
 export const loader = async () => {
   try {
@@ -11,17 +18,17 @@ export const loader = async () => {
       return redirect("/login");
     } else {
       const userCtx = jwtDecode(accessToken);
-      const sessions = await getMySessions(userCtx.userId, accessToken);
-      return { userCtx, accessToken, sessions };
+      return { userCtx, accessToken };
     }
   } catch (error) {
     console.log(error.message);
+    return null;
   }
 };
 
 const Root = () => {
   const navigate = useNavigate();
-  const { userCtx, accessToken } = useLoaderData();
+  const { userCtx } = useLoaderData();
 
   useEffect(() => {
     const { exp } = userCtx;
@@ -38,8 +45,12 @@ const Root = () => {
         <nav className="flex justify-between">
           <div id="logo">Logo</div>
           <div id="nav-buttons" className="flex">
-            <HomeIcon size={30} className="mx-5 text-lg" />
-            <SearchIcon size={30} className="mx-5 text-lg" />
+            <Link to="/">
+              <HomeIcon size={30} className="mx-5 text-lg" />
+            </Link>
+            <Link to="find-session">
+              <SearchIcon size={30} className="mx-5 text-lg" />
+            </Link>
             <PlusCircleIcon size={30} className="mx-5 text-lg" />
           </div>
           <div id="profile-button">Profile Button</div>
@@ -48,6 +59,7 @@ const Root = () => {
       <div id="main-content" className="absolute left-0 right-0 top-20 z-0">
         <Outlet />
       </div>
+      <Toaster className="mt-5" />
     </>
   );
 };

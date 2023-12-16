@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import SessionCard from "./SessionCard";
 
 const SessionsDisplay = (props) => {
@@ -11,7 +11,14 @@ const SessionsDisplay = (props) => {
         <div id="main-content-body" className="mt-8">
           <div id="display">
             {props.sessions.map((session) => {
-              return <SessionCard key={session.uuid} session={session} />;
+              return (
+                <SessionCard
+                  key={session.uuid}
+                  session={session}
+                  setSessions={props.setSessions}
+                  getSessions={props.getSessions}
+                />
+              );
             })}
           </div>
         </div>
