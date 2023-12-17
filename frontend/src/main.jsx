@@ -13,6 +13,7 @@ import { loader as rootLoader } from "./routes/Root.jsx";
 import FindSessions from "./routes/FindSessions.jsx"; // loader as findSessionsLoader,
 import Profile from "./routes/Profile.jsx";
 import Session from "./routes/Session.jsx";
+import Create from "./routes/Create.jsx";
 
 const router = createBrowserRouter([
   {
@@ -43,7 +44,7 @@ const router = createBrowserRouter([
       },
       {
         path: "create",
-        element: <h1>Create a Session</h1>,
+        element: <Create />,
       },
     ],
   },

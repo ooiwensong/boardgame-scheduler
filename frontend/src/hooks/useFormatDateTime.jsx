@@ -7,7 +7,7 @@ export default function useFormatDateTime(data) {
   const lastUpdated =
     data.last_updated && formatDistanceToNow(new Date(data.last_updated));
   const createdAt =
-    data.created_at && format(new Date(data.created_at), "MMM yyyy");
+    data.created_at && format(new Date(data.created_at), "dd MMM yyyy");
 
   return { date, startTime, endTime, lastUpdated, createdAt };
 }

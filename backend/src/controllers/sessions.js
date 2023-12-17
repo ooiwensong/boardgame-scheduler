@@ -101,12 +101,11 @@ const createSession = async (req, res) => {
   try {
     await db.query(
       `
-    INSERT INTO sessions (host_id, game_title, game_image, max_guests, date, start_time, end_time, address)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+    INSERT INTO sessions (host_id, game_title, max_guests, date, start_time, end_time, address)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [
         req.body.userId,
         req.body.game_title,
-        req.body.game_image,
         req.body.max_guests,
         req.body.date,
         req.body.start_time,
