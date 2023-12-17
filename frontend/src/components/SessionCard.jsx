@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import useFormatDateTime from "@/hooks/useFormatDateTime";
-import { Link, useRouteLoaderData } from "react-router-dom";
+import { Link, useNavigate, useRouteLoaderData } from "react-router-dom";
 import {
   ArrowLeftFromLine,
   ArrowRightToLine,
@@ -45,9 +45,10 @@ const SessionCard = (props) => {
   const { toast } = useToast();
   const { userCtx, accessToken } = useRouteLoaderData("root");
 
+  const navigate = useNavigate();
   const formatted = useFormatDateTime(session);
   const isHost = session.host_id === userCtx.userId;
-  const isGuest = session.guests.includes(userCtx.userId);
+  const isGuest = session.guests?.includes(userCtx.userId);
 
   const handleJoinSession = async () => {
     try {
@@ -132,10 +133,12 @@ const SessionCard = (props) => {
             />
           </div>
           <div id="session-details" className="ml-10 flex-col space-y-1">
-            <b className="flex items-center">
-              <PuzzleIcon size={20} className="mr-3 text-orange-600" />
-              {session.game_title}
-            </b>
+            <Link to={`/profile/${session.host_id}/session/${session.uuid}`}>
+              <b className="flex items-center">
+                <PuzzleIcon size={20} className="mr-3 text-orange-600" />
+                {session.game_title}
+              </b>
+            </Link>
             <p className="flex items-center">
               <CalendarDays size={20} className="mr-3 text-orange-600" />
               {formatted.date}
@@ -155,7 +158,9 @@ const SessionCard = (props) => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Link to="/create">
+                      <Link
+                        to={`/profile/${session.host_id}/session/${session.uuid}/edit`}
+                      >
                         <Button
                           variant="ghost"
                           className="mr-1 h-fit rounded-full p-2 hover:bg-orange-50"
@@ -222,7 +227,7 @@ const SessionCard = (props) => {
                         <TooltipTrigger>
                           <Button
                             variant="ghost"
-                            className="h-fit rounded-full p-2 hover:bg-orange-100"
+                            className="h-fit rounded-full p-2 text-orange-600 hover:bg-orange-100 disabled:text-gray-400"
                             disabled={session.is_full}
                             onClick={() => {
                               handleJoinSession();
@@ -232,7 +237,7 @@ const SessionCard = (props) => {
                               });
                             }}
                           >
-                            <ArrowRightToLine className=" text-orange-600" />
+                            <ArrowRightToLine className="text-inherit" />
                           </Button>
                           <TooltipContent>
                             <p>Join session</p>

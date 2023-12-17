@@ -4,7 +4,10 @@ import SessionCard from "./SessionCard";
 const SessionsDisplay = (props) => {
   return (
     <>
-      <div className="main-content-wrapper container mb-5 max-w-5xl">
+      <div
+        id="sessions-main-content-wrapper"
+        className="container mb-5 max-w-5xl"
+      >
         <div id="main-content-header">
           <h1 className="mt-10 text-4xl font-bold">{props.children}</h1>
         </div>

@@ -51,7 +51,9 @@ const Root = () => {
             <Link to="find-session">
               <SearchIcon size={30} className="mx-5 text-lg" />
             </Link>
-            <PlusCircleIcon size={30} className="mx-5 text-lg" />
+            <Link to="/create">
+              <PlusCircleIcon size={30} className="mx-5 text-lg" />
+            </Link>
           </div>
           <div id="profile-button">Profile Button</div>
         </nav>

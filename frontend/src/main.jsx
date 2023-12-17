@@ -11,6 +11,8 @@ import { action as loginAction } from "./routes/Login.jsx";
 import { action as registerAction } from "./routes/Register.jsx";
 import { loader as rootLoader } from "./routes/Root.jsx";
 import FindSessions from "./routes/FindSessions.jsx"; // loader as findSessionsLoader,
+import Profile from "./routes/Profile.jsx";
+import Session from "./routes/Session.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,11 +31,15 @@ const router = createBrowserRouter([
       },
       {
         path: "profile/:userId",
-        element: <h1>User Profile</h1>,
+        element: <Profile />,
       },
       {
         path: "profile/:userId/session/:sessionId",
-        element: <h1>User Session</h1>,
+        element: <Session />,
+      },
+      {
+        path: "profile/:userId/session/:sessionId/edit",
+        element: <h1>Edit a Session</h1>,
       },
       {
         path: "create",

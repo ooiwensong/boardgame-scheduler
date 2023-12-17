@@ -25,7 +25,7 @@ const getSingleSession = async (req, res) => {
     await client.query("COMMIT");
 
     res.json({
-      sessionData: sessionData.rows,
+      sessionData: sessionData.rows[0],
       sessionGuests: sessionGuests.rows,
     });
   } catch (error) {
