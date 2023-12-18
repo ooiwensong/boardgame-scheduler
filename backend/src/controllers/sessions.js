@@ -42,13 +42,16 @@ const getSingleSession = async (req, res) => {
 // Get information about sessions a user is hosting
 const getMyHostSessions = async (req, res) => {
   try {
-    const { rows } = await db.query(
-      `SELECT * 
-      FROM sessions 
-      WHERE host_id = $1`,
+    const hostSessions = await db.query(
+      `SELECT s.uuid, s.host_id, s.game_title, s.max_guests, s.num_guests, s.date, s.start_time, s.end_time, s.address, s.is_full, s.expires_at, s.created_at, s.last_updated, s.game_image, array_agg(guests.guest_id) "guests"
+      FROM sessions AS s
+      FULL JOIN guests ON s.uuid = guests.session_id
+      WHERE host_id=$1
+      GROUP BY s.uuid
+      ORDER BY date, start_time`,
       [req.body.userId]
     );
-    res.json(rows);
+    res.json(hostSessions.rows);
   } catch (error) {
     console.log(error.message);
     res.status(400).json({ status: "error", msg: "error retrieving sessions" });
@@ -98,8 +101,15 @@ const getOtherUserSessions = async (req, res) => {
 
 // Create and host a session
 const createSession = async (req, res) => {
+  const client = await db.connect();
   try {
-    await db.query(
+    await client.query("BEGIN");
+
+    if (req.decoded.userId !== req.body.userId) {
+      return res.status(400).json({ status: "error", msg: "not authorised" });
+    }
+
+    await client.query(
       `
     INSERT INTO sessions (host_id, game_title, max_guests, date, start_time, end_time, address)
     VALUES ($1, $2, $3, $4, $5, $6, $7)`,
@@ -114,10 +124,15 @@ const createSession = async (req, res) => {
       ]
     );
 
+    await client.query("COMMIT");
+
     res.json({ status: "ok", msg: "session created successfully" });
   } catch (error) {
     console.log(error.message);
+    await client.query("ROLLBACK");
     res.status(400).json({ status: "error", msg: "error creating sessions" });
+  } finally {
+    client.release();
   }
 };
 
@@ -125,6 +140,17 @@ const editSession = async (req, res) => {
   const client = await db.connect();
   try {
     await client.query("BEGIN");
+
+    const host_id = await client.query(
+      `
+    SELECT host_id
+    FROM sessions
+    WHERE uuid=$1`,
+      [req.params.sessionId]
+    );
+    if (host_id.rows[0].host_id !== req.decoded.userId) {
+      return res.status(400).json({ status: "error", msg: "not authorised" });
+    }
 
     for (const attribute in req.body) {
       await client.query(
@@ -150,18 +176,38 @@ const editSession = async (req, res) => {
 
 // Delete a session hosted by current user
 const deleteSession = async (req, res) => {
+  const client = await db.connect();
   try {
-    await db.query(
+    await client.query("BEGIN");
+
+    const host_id = await client.query(
+      `
+    SELECT host_id
+    FROM sessions
+    WHERE uuid=$1`,
+      [req.body.sessionId]
+    );
+
+    if (host_id.rows[0].host_id !== req.decoded.userId) {
+      return res.status(400).json({ status: "error", msg: "not authorised" });
+    }
+
+    await client.query(
       `
     DELETE FROM sessions
     WHERE uuid = $1`,
       [req.body.sessionId]
     );
 
+    await client.query("COMMIT");
+
     res.json({ status: "ok", msg: "session deleted successfully" });
   } catch (error) {
+    await client.query("ROLLBACK");
     console.log(error.message);
     res.status(400).json({ status: "error", msg: "error deleting session" });
+  } finally {
+    client.release();
   }
 };
 
@@ -171,6 +217,10 @@ const joinSession = async (req, res) => {
   try {
     await client.query("BEGIN");
 
+    if (req.body.userId !== req.decoded.userId) {
+      return res.status(400).json({ status: "error", msg: "not authorised" });
+    }
+
     const host = await client.query(
       `
     SELECT host_id
@@ -178,6 +228,7 @@ const joinSession = async (req, res) => {
     WHERE uuid=$1`,
       [req.body.sessionId]
     );
+
     if (host.rows[0].host_id === req.body.userId) {
       return res.status(400).json({
         status: "error",
@@ -219,8 +270,15 @@ const joinSession = async (req, res) => {
 
 // Leave a session hosted by another user
 const leaveSession = async (req, res) => {
+  const client = await db.connect();
   try {
-    await db.query(
+    await client.query("BEGIN");
+
+    if (req.body.userId !== req.decoded.userId) {
+      return res.status(400).json({ status: "error", msg: "not authorised" });
+    }
+
+    await client.query(
       `
     DELETE FROM guests
     WHERE session_id=$1
@@ -228,10 +286,15 @@ const leaveSession = async (req, res) => {
       [req.body.sessionId, req.body.userId]
     );
 
+    await client.query("COMMIT");
+
     res.json({ status: "ok", msg: "left session successfully" });
   } catch (error) {
+    await client.query("ROLLBACK");
     console.log(error.message);
     res.status(400).json({ status: "error", msg: "error leaving session" });
+  } finally {
+    client.release();
   }
 };
 
