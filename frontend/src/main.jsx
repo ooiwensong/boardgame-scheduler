@@ -14,6 +14,8 @@ import FindSessions from "./routes/FindSessions.jsx"; // loader as findSessionsL
 import Profile from "./routes/Profile.jsx";
 import Session from "./routes/Session.jsx";
 import Create from "./routes/Create.jsx";
+import Edit from "./routes/Edit.jsx";
+import Admin from "./routes/Admin.jsx";
 
 const router = createBrowserRouter([
   {
@@ -40,11 +42,15 @@ const router = createBrowserRouter([
       },
       {
         path: "profile/:userId/session/:sessionId/edit",
-        element: <h1>Edit a Session</h1>,
+        element: <Edit />,
       },
       {
         path: "create",
         element: <Create />,
+      },
+      {
+        path: "admin",
+        element: <Admin />,
       },
     ],
   },
