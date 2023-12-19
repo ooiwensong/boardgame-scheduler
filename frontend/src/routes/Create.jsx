@@ -23,11 +23,14 @@ import React, { useState, useRef } from "react";
 import { Form, useNavigate, useRouteLoaderData } from "react-router-dom";
 
 const Create = () => {
-  const [date, setDate] = useState("");
-  const [games, setGames] = useState("");
+  const [date, setDate] = useState();
+  const [gamesData, setGamesData] = useState("");
+  const [selectedGameTitle, setSelectedGameTitle] = useState("");
+  const [selectedGameImage, setSelectedGameImage] = useState("");
   const { userCtx, accessToken } = useRouteLoaderData("root");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [showSearchPortal, setShowSearchPortal] = useState(false);
 
   const formRef = useRef();
   const titleRef = useRef();
@@ -38,7 +41,7 @@ const Create = () => {
         `https://boardgamegeek.com/xmlapi2/search?query=${query}&type=boardgame`,
       );
       const data = await res.text();
-      setGames(data);
+      setGamesData(data);
     } catch (error) {
       console.log(error.message);
     }
@@ -49,6 +52,7 @@ const Create = () => {
     const newGameData = Object.fromEntries(formData);
     newGameData.userId = userCtx.userId;
     newGameData.date = date;
+    newGameData.game_image = selectedGameImage;
     try {
       const res = await fetch(import.meta.env.VITE_SERVER + "/api/sessions", {
         method: "PUT",
@@ -89,11 +93,21 @@ const Create = () => {
                 name="game_title"
                 type="text"
                 className="active: ring-orange-400"
+                onFocus={() => setShowSearchPortal(true)}
+                value={selectedGameTitle}
                 onChange={(e) => {
+                  setSelectedGameTitle(e.target.value);
                   getGames(e.target.value);
                 }}
               />
-              {/* {titleRef.current?.value && <GameSearchResults games={games} />} */}
+              {titleRef.current?.value && showSearchPortal && (
+                <GameSearchResults
+                  gamesData={gamesData}
+                  setSelectedGameTitle={setSelectedGameTitle}
+                  setSelectedGameImage={setSelectedGameImage}
+                  setShowSearchPortal={setShowSearchPortal}
+                />
+              )}
             </div>
             <div id="create-max-guests">
               <Label className="text-md">Max Guests</Label>
@@ -132,12 +146,7 @@ const Create = () => {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent>
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    defaultMonth={new Date()}
-                  />
+                  <Calendar mode="single" selected={date} onSelect={setDate} />
                 </PopoverContent>
               </Popover>
             </div>

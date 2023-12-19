@@ -66,7 +66,12 @@ const SessionCard = (props) => {
           }),
         },
       );
-      getSessions();
+      if (res.ok) {
+        getSessions();
+        return res;
+      } else {
+        return res;
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -88,7 +93,12 @@ const SessionCard = (props) => {
           }),
         },
       );
-      getSessions();
+      if (res.ok) {
+        getSessions();
+        return res;
+      } else {
+        return res;
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -106,7 +116,12 @@ const SessionCard = (props) => {
           sessionId: session.uuid,
         }),
       });
-      getSessions();
+      if (res.ok) {
+        getSessions();
+        return res;
+      } else {
+        return res;
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -202,12 +217,14 @@ const SessionCard = (props) => {
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
                           className="bg-blue-500 hover:bg-blue-600"
-                          onClick={() => {
-                            handleDeleteSession();
-                            toast({
-                              title: "Session deleted",
-                              description: `${session.game_title} on ${formatted.date}`,
-                            });
+                          onClick={async () => {
+                            const res = await handleDeleteSession();
+                            if (res.ok) {
+                              toast({
+                                title: "Session deleted",
+                                description: `${session.game_title} on ${formatted.date}`,
+                              });
+                            }
                           }}
                         >
                           Confirm
@@ -229,12 +246,14 @@ const SessionCard = (props) => {
                             variant="ghost"
                             className="h-fit rounded-full p-2 text-orange-600 hover:bg-orange-100 disabled:text-gray-400"
                             disabled={session.is_full}
-                            onClick={() => {
-                              handleJoinSession();
-                              toast({
-                                title: "🎉 Yay! Session joined! 🎉",
-                                description: `${session.game_title} on ${formatted.date}`,
-                              });
+                            onClick={async () => {
+                              const res = await handleJoinSession();
+                              if (res.ok) {
+                                toast({
+                                  title: "🎉 Yay! Session joined! 🎉",
+                                  description: `${session.game_title} on ${formatted.date}`,
+                                });
+                              }
                             }}
                           >
                             <ArrowRightToLine className="text-inherit" />
@@ -255,12 +274,14 @@ const SessionCard = (props) => {
                           <Button
                             variant="ghost"
                             className="h-fit rounded-full p-2 hover:bg-orange-200"
-                            onClick={() => {
-                              handleLeaveSession();
-                              toast({
-                                title: "You have left the session",
-                                description: "Sorry to see you go!",
-                              });
+                            onClick={async () => {
+                              const res = await handleLeaveSession();
+                              if (res.ok) {
+                                toast({
+                                  title: "You have left the session",
+                                  description: "Sorry to see you go!",
+                                });
+                              }
                             }}
                           >
                             <ArrowLeftFromLine className=" text-orange-600" />

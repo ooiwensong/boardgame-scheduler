@@ -111,8 +111,8 @@ const createSession = async (req, res) => {
 
     await client.query(
       `
-    INSERT INTO sessions (host_id, game_title, max_guests, date, start_time, end_time, address)
-    VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+    INSERT INTO sessions (host_id, game_title, max_guests, date, start_time, end_time, address, game_image)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
       [
         req.body.userId,
         req.body.game_title,
@@ -121,6 +121,7 @@ const createSession = async (req, res) => {
         req.body.start_time,
         req.body.end_time,
         req.body.address,
+        req.body.game_image,
       ]
     );
 
