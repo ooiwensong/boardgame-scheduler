@@ -11,6 +11,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -23,14 +24,18 @@ import React, { useState, useRef } from "react";
 import { Form, useNavigate, useRouteLoaderData } from "react-router-dom";
 
 const Create = () => {
+  const [query, setQuery] = useState("");
   const [date, setDate] = useState();
   const [gamesData, setGamesData] = useState("");
   const [selectedGameTitle, setSelectedGameTitle] = useState("");
   const [selectedGameImage, setSelectedGameImage] = useState("");
+  const [selectedGameId, setSelectedGameId] = useState("");
+  const [selectedGameYear, setSelectedGameYear] = useState("");
+  const [showSearchPortal, setShowSearchPortal] = useState(false);
+
   const { userCtx, accessToken } = useRouteLoaderData("root");
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [showSearchPortal, setShowSearchPortal] = useState(false);
 
   const formRef = useRef();
   const titleRef = useRef();
@@ -70,6 +75,26 @@ const Create = () => {
     }
   };
 
+  const createEntry = async () => {
+    try {
+      const res = await fetch(import.meta.env.VITE_SERVER + "/api/library", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          id: selectedGameId,
+          title: selectedGameTitle,
+          year: selectedGameYear,
+          imageURL: selectedGameImage,
+        }),
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <>
       <div
@@ -98,13 +123,17 @@ const Create = () => {
                 onChange={(e) => {
                   setSelectedGameTitle(e.target.value);
                   getGames(e.target.value);
+                  setQuery(e.target.value);
                 }}
               />
               {titleRef.current?.value && showSearchPortal && (
                 <GameSearchResults
+                  query={query}
                   gamesData={gamesData}
                   setSelectedGameTitle={setSelectedGameTitle}
                   setSelectedGameImage={setSelectedGameImage}
+                  setSelectedGameId={setSelectedGameId}
+                  setSelectedGameYear={setSelectedGameYear}
                   setShowSearchPortal={setShowSearchPortal}
                 />
               )}
@@ -113,16 +142,18 @@ const Create = () => {
               <Label className="text-md">Max Guests</Label>
               <Select name="max_guests">
                 <SelectTrigger className="w-full">
-                  <SelectValue />
+                  <SelectValue placeholder="Select the number of guests" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1</SelectItem>
-                  <SelectItem value="2">2</SelectItem>
-                  <SelectItem value="3">3</SelectItem>
-                  <SelectItem value="4">4</SelectItem>
-                  <SelectItem value="5">5</SelectItem>
-                  <SelectItem value="6">6</SelectItem>
-                </SelectContent>
+                <SelectGroup>
+                  <SelectContent>
+                    <SelectItem value="1">1</SelectItem>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="4">4</SelectItem>
+                    <SelectItem value="5">5</SelectItem>
+                    <SelectItem value="6">6</SelectItem>
+                  </SelectContent>
+                </SelectGroup>
               </Select>
             </div>
             <div id="create-date">
@@ -168,6 +199,7 @@ const Create = () => {
                 className="mt-100 w-full bg-blue-500 hover:bg-blue-600"
                 onClick={async () => {
                   const res = await createSession();
+                  createEntry();
                   if (res.ok) {
                     toast({
                       title: "You have scheduled a new session!",

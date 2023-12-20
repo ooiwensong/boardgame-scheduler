@@ -31,8 +31,13 @@ import {
 
 const Edit = () => {
   const [sessionData, setSessionData] = useState({});
+  const [query, setQuery] = useState("");
   const [date, setDate] = useState();
-  const [games, setGames] = useState("");
+  const [gamesData, setGamesData] = useState("");
+  const [selectedGameTitle, setSelectedGameTitle] = useState("");
+  const [selectedGameImage, setSelectedGameImage] = useState("");
+  const [showSearchPortal, setShowSearchPortal] = useState(false);
+
   const { userCtx, accessToken } = useRouteLoaderData("root");
   const navigate = useNavigate();
   const params = useParams();
@@ -41,17 +46,17 @@ const Edit = () => {
   const formRef = useRef();
   const titleRef = useRef();
 
-  // const getGames = async (query) => {
-  //   try {
-  //     const res = await fetch(
-  //       `https://boardgamegeek.com/xmlapi2/search?query=${query}&type=boardgame`,
-  //     );
-  //     const data = await res.text();
-  //     setGames(data);
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // };
+  const getGames = async (query) => {
+    try {
+      const res = await fetch(
+        `https://boardgamegeek.com/xmlapi2/search?query=${query}&type=boardgame`,
+      );
+      const data = await res.text();
+      setGamesData(data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const getSingleSession = async () => {
     try {
@@ -75,9 +80,10 @@ const Edit = () => {
 
   const editSession = async () => {
     const formData = new FormData(formRef.current);
-    const UpdatedGameData = Object.fromEntries(formData);
-    UpdatedGameData.host_id = userCtx.userId;
-    UpdatedGameData.date = date;
+    const updatedGameData = Object.fromEntries(formData);
+    updatedGameData.host_id = userCtx.userId;
+    updatedGameData.date = date;
+    if (selectedGameImage) updatedGameData.game_image = selectedGameImage;
     try {
       const res = await fetch(
         import.meta.env.VITE_SERVER + "/api/sessions/" + params.sessionId,
@@ -87,10 +93,12 @@ const Edit = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: JSON.stringify(UpdatedGameData),
+          body: JSON.stringify(updatedGameData),
         },
       );
       if (res.ok) {
+        return res;
+      } else {
         return res;
       }
     } catch (error) {
@@ -127,13 +135,24 @@ const Edit = () => {
                 ref={titleRef}
                 name="game_title"
                 type="text"
-                defaultValue={sessionData.game_title}
                 className="active: ring-orange-400"
-                // onChange={(e) => {
-                //   getGames(e.target.value);
-                // }}
+                onFocus={() => setShowSearchPortal(true)}
+                value={selectedGameTitle || sessionData.game_title}
+                onChange={(e) => {
+                  setSelectedGameTitle(e.target.value);
+                  getGames(e.target.value);
+                  setQuery(e.target.value);
+                }}
               />
-              {/* {titleRef.current?.value && <GameSearchResults games={games} />} */}
+              {titleRef.current?.value && showSearchPortal && (
+                <GameSearchResults
+                  query={query}
+                  gamesData={gamesData}
+                  setSelectedGameTitle={setSelectedGameTitle}
+                  setSelectedGameImage={setSelectedGameImage}
+                  setShowSearchPortal={setShowSearchPortal}
+                />
+              )}
             </div>
             <div id="create-max-guests">
               <Label className="text-md">Max Guests</Label>
@@ -145,7 +164,9 @@ const Edit = () => {
                   <SelectGroup>
                     <SelectItem value="1">1</SelectItem>
                     <SelectItem value="2">2</SelectItem>
-                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="3" selected>
+                      3
+                    </SelectItem>
                     <SelectItem value="4">4</SelectItem>
                     <SelectItem value="5">5</SelectItem>
                     <SelectItem value="6">6</SelectItem>
@@ -209,12 +230,15 @@ const Edit = () => {
                 className="mt-100 w-full bg-blue-500 hover:bg-blue-600"
                 onClick={async () => {
                   const res = await editSession();
-                  console.log(res);
                   if (res.ok) {
                     toast({
                       title: "Your session has been updated",
                     });
                     navigate("/");
+                  } else {
+                    toast({
+                      title: "Oops, something went wrong.",
+                    });
                   }
                 }}
               >

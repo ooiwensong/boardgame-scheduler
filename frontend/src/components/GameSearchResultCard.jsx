@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
+import { useRouteLoaderData } from "react-router-dom";
 import convert from "xml-js";
 
 const GameSearchResultCard = (props) => {
@@ -6,8 +7,9 @@ const GameSearchResultCard = (props) => {
     game,
     setSelectedGameTitle,
     setSelectedGameImage,
+    setSelectedGameId,
+    setSelectedGameYear,
     setShowSearchPortal,
-    selectedGame,
   } = props;
 
   const gameTitle = game?.name?._attributes.value;
@@ -27,6 +29,8 @@ const GameSearchResultCard = (props) => {
           : parsed.items.item.name._attributes.value,
       );
       setSelectedGameImage(parsed.items.item.thumbnail._text);
+      setSelectedGameId(parsed.items.item._attributes.id);
+      setSelectedGameYear(parsed.items.item.yearpublished._attributes.value);
     } catch (error) {
       console.log(error.message);
     }
@@ -36,13 +40,13 @@ const GameSearchResultCard = (props) => {
     <>
       <button
         type="button"
-        className="flex w-full px-2 align-middle"
+        className="my-1 w-full px-2"
         onClick={() => {
           handleClick();
           setShowSearchPortal(false);
         }}
       >
-        <div className="flex h-[30px]">
+        <div className="text-left">
           {gameTitle} ({gameYear})
         </div>
       </button>
