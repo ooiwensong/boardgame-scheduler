@@ -9,17 +9,33 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import React, { useState } from "react";
-import { Form, Link, redirect } from "react-router-dom";
+import { Form, Link, redirect, useActionData } from "react-router-dom";
 
 export const action = async ({ request }) => {
+  const loginData = Object.fromEntries(await request.formData());
+  const errors = {};
+
+  if (loginData.email === "") {
+    errors.email = "Email field cannot be empty!";
+  }
+
+  if (loginData.password === "") {
+    errors.password = "Password field cannot be empty!";
+  }
+
+  if (Object.keys(errors).length) {
+    return errors;
+  }
+
   try {
-    const loginData = Object.fromEntries(await request.formData());
     const res = await loginUser(loginData);
     if (res.status === "ok") {
       return redirect("/");
     } else {
-      console.log(res.msg);
+      errors.failed = "Login unsuccessful. " + res.msg;
+      return errors;
     }
   } catch (error) {
     console.log(error.message);
@@ -27,6 +43,12 @@ export const action = async ({ request }) => {
 };
 
 const Login = () => {
+  const errors = useActionData();
+  const [emailInput, setEmailInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+
+  const { toast } = useToast();
+
   return (
     <div className="container flex h-screen">
       <div id="login-card" className="mx-auto my-11 w-[350px]">
@@ -36,12 +58,31 @@ const Login = () => {
               <CardTitle className="mb-5 text-center text-4xl">Bord</CardTitle>
             </CardHeader>
             <CardContent>
+              {errors?.failed && (
+                <small className="text-red-500">{errors.failed}</small>
+              )}
               <div>
-                <Input type="text" name="email" placeholder="Email" />
+                <Input
+                  type="text"
+                  name="email"
+                  placeholder="Email"
+                  onChange={(e) => setEmailInput(e.target.value)}
+                />
               </div>
+              {errors?.email && !emailInput && (
+                <small className="text-red-500">{errors.email}</small>
+              )}
               <div className="mt-2">
-                <Input type="password" name="password" placeholder="Password" />
+                <Input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                />
               </div>
+              {errors?.password && !passwordInput && (
+                <small className="text-red-500">{errors.password}</small>
+              )}
             </CardContent>
             <CardFooter>
               <Button

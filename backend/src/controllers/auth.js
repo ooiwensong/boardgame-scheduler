@@ -29,7 +29,7 @@ const login = async (req, res) => {
       console.log("email or password is incorrect");
       return res
         .status(400)
-        .json({ status: "error", msg: "email or password is incorrect" });
+        .json({ status: "error", msg: "Email or password is incorrect." });
     }
 
     const claims = {
@@ -49,7 +49,7 @@ const login = async (req, res) => {
     res.json({ accessToken, refreshToken });
   } catch (error) {
     console.log(error);
-    res.json({ status: "error", msg: "login unsuccessful" });
+    res.json({ status: "error", msg: "Login unsuccessful" });
   }
 };
 
@@ -68,7 +68,7 @@ const register = async (req, res) => {
     if (userResults)
       return res
         .status(400)
-        .json({ status: "error", msg: "email already exists" });
+        .json({ status: "error", msg: "Email already exists." });
 
     const hash = await bcrypt.hash(req.body.password, 12);
     await db.query(
@@ -81,7 +81,7 @@ const register = async (req, res) => {
     res.json({ status: "ok", msg: "user created successfully" });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ status: "error", msg: "error creating user" });
+    res.status(400).json({ status: "error", msg: "Error creating user." });
   }
 };
 
