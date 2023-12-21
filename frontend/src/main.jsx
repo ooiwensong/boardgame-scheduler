@@ -16,12 +16,14 @@ import Session from "./routes/Session.jsx";
 import Create from "./routes/Create.jsx";
 import Edit from "./routes/Edit.jsx";
 import Admin from "./routes/Admin.jsx";
+import ErrorPage from "./components/ErrorPage.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     id: "root",
+    errorElement: <ErrorPage />,
     loader: rootLoader,
     children: [
       {
