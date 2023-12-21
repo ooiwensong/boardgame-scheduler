@@ -18,7 +18,7 @@ const login = async (req, res) => {
       console.log("user is not registered");
       return res
         .status(400)
-        .json({ status: "error", msg: "login unsuccessful" });
+        .json({ status: "error", error: [{ msg: "User is not registered" }] });
     }
 
     const passwordResults = await bcrypt.compare(
@@ -29,7 +29,10 @@ const login = async (req, res) => {
       console.log("email or password is incorrect");
       return res
         .status(400)
-        .json({ status: "error", msg: "Email or password is incorrect." });
+        .json({
+          status: "error",
+          error: [{ msg: "Email or password is incorrect." }],
+        });
     }
 
     const claims = {
@@ -85,7 +88,6 @@ const register = async (req, res) => {
   }
 };
 
-// LOOK INTO CHECKING VALIDITY OF REFRESH TOKEN ALSO
 const refresh = async (req, res) => {
   try {
     const decoded = jwt.decode(req.body.refresh, process.env.REFRESH_SECRET);

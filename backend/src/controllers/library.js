@@ -18,6 +18,15 @@ const getLibraryEntries = async (req, res) => {
 
 const createNewEntry = async (req, res) => {
   try {
+    const { rows } = await db.query(
+      `
+    SELECT id
+    FROM library
+    WHERE id=$1`,
+      [req.body.id]
+    );
+    if (rows[0]) return;
+
     await db.query(
       `
     INSERT INTO library (id, title, year_published, image_url)

@@ -13,7 +13,6 @@ const loginUser = async (loginData) => {
       localStorage.setItem("refreshToken", data.refreshToken);
       return { status: "ok", msg: "login successful" };
     } else {
-      console.log(data.msg);
       return data;
     }
   } catch (error) {

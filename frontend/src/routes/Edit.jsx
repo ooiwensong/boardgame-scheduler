@@ -106,6 +106,17 @@ const Edit = () => {
     }
   };
 
+  const validateForm = () => {
+    if (!date) {
+      return false;
+    }
+    const formData = new FormData(formRef.current);
+    for (const values of formData.values()) {
+      if (!values) return false;
+    }
+    return true;
+  };
+
   useEffect(() => {
     if (userCtx.userId !== params.userId) {
       navigate("/");
@@ -122,7 +133,7 @@ const Edit = () => {
         <h1 className="mt-10 text-4xl font-bold">Edit your session</h1>
         <section
           id="create"
-          className="flex rounded-md border border-gray-300 px-10 py-5 shadow-md"
+          className="flex justify-center rounded-md border border-gray-300 px-10 py-5 shadow-md"
         >
           <Form
             ref={formRef}
@@ -229,6 +240,12 @@ const Edit = () => {
                 type="button"
                 className="mt-100 w-full bg-blue-500 hover:bg-blue-600"
                 onClick={async () => {
+                  if (!validateForm()) {
+                    toast({
+                      title: "Input fields cannot be empty",
+                    });
+                    return;
+                  }
                   const res = await editSession();
                   if (res.ok) {
                     toast({
@@ -236,6 +253,8 @@ const Edit = () => {
                     });
                     navigate("/");
                   } else {
+                    const data = await res.json();
+                    console.log(data);
                     toast({
                       title: "Oops, something went wrong.",
                     });

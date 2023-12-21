@@ -34,7 +34,7 @@ export const action = async ({ request }) => {
     if (res.status === "ok") {
       return redirect("/");
     } else {
-      errors.failed = "Login unsuccessful. " + res.msg;
+      errors.failed = "Login unsuccessful. " + res.error[0].msg;
       return errors;
     }
   } catch (error) {

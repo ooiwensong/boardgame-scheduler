@@ -8,7 +8,6 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { getMySessions } from "@/sessions";
 import { Toaster } from "@/components/ui/toaster";
 import ProfileButton from "@/components/ProfileButton";
 

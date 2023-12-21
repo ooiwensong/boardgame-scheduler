@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import useFormatDateTime from "@/hooks/useFormatDateTime";
 import { Link, useNavigate, useRouteLoaderData } from "react-router-dom";
@@ -18,6 +11,7 @@ import {
   MapPin,
   PencilIcon,
   PuzzleIcon,
+  UsersRound,
   XCircle,
 } from "lucide-react";
 import clsx from "clsx";
@@ -45,7 +39,6 @@ const SessionCard = (props) => {
   const { toast } = useToast();
   const { userCtx, accessToken } = useRouteLoaderData("root");
 
-  const navigate = useNavigate();
   const formatted = useFormatDateTime(session);
   const isHost = session.host_id === userCtx.userId;
   const isGuest = session.guests?.includes(userCtx.userId);
@@ -165,6 +158,10 @@ const SessionCard = (props) => {
             <p className="flex items-center">
               <MapPin size={20} className="mr-3 text-orange-600" />
               {session.address}
+            </p>
+            <p className="flex items-center">
+              <UsersRound size={20} className="mr-3 text-orange-600" />
+              {session.num_guests} of {session.max_guests} guest slots filled
             </p>
           </div>
           <div className="ml-auto">

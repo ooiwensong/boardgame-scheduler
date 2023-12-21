@@ -7,6 +7,7 @@ import {
   MapPin,
   PencilIcon,
   Puzzle,
+  UsersRound,
   XCircle,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -192,6 +193,16 @@ const Session = () => {
               >
                 <MapPin size={25} className="mr-3 text-orange-600" />
                 <p>{sessionData.address}</p>
+              </div>
+              <div
+                id="session-guest-slots"
+                className="mb-3 ml-10 flex items-center text-xl"
+              >
+                <UsersRound size={25} className="mr-3 text-orange-600" />
+                <p>
+                  {sessionData.num_guests} of {sessionData.max_guests} guest
+                  slots filled
+                </p>
               </div>
               {formatted.lastUpdated && (
                 <div

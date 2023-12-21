@@ -95,6 +95,17 @@ const Create = () => {
     }
   };
 
+  const validateForm = () => {
+    if (!date) {
+      return false;
+    }
+    const formData = new FormData(formRef.current);
+    for (const values of formData.values()) {
+      if (!values) return false;
+    }
+    return true;
+  };
+
   return (
     <>
       <div
@@ -104,7 +115,7 @@ const Create = () => {
         <h1 className="mt-10 text-4xl font-bold">Schedule a session</h1>
         <section
           id="create"
-          className="flex rounded-md border border-gray-300 px-10 py-5 shadow-md"
+          className="flex justify-center rounded-md border border-gray-300 px-10 py-5 shadow-md"
         >
           <Form
             ref={formRef}
@@ -117,6 +128,7 @@ const Create = () => {
                 ref={titleRef}
                 name="game_title"
                 type="text"
+                placeholder="Search for a game"
                 className="active: ring-orange-400"
                 onFocus={() => setShowSearchPortal(true)}
                 value={selectedGameTitle}
@@ -198,6 +210,12 @@ const Create = () => {
                 type="button"
                 className="mt-100 w-full bg-blue-500 hover:bg-blue-600"
                 onClick={async () => {
+                  if (!validateForm()) {
+                    toast({
+                      title: "Input fields cannot be empty",
+                    });
+                    return;
+                  }
                   const res = await createSession();
                   createEntry();
                   if (res.ok) {

@@ -8,7 +8,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
@@ -16,7 +15,6 @@ import { Calendar } from "@/components/ui/calendar";
 const FindSessions = () => {
   const [sessions, setSessions] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const [date, setDate] = useState("");
   const { userCtx, accessToken } = useRouteLoaderData("root");
 
   async function getSessions() {

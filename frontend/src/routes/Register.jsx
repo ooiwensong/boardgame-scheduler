@@ -33,8 +33,7 @@ export const action = async ({ request }) => {
     if (res.status === "ok") {
       return redirect("/login");
     } else {
-      console.log(res.msg);
-      errors.failed = "Registration failed. " + res.msg;
+      errors.failed = "Registration failed. " + res.error[0].msg;
       return errors;
     }
   } catch (error) {
