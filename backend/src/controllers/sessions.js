@@ -106,7 +106,7 @@ const createSession = async (req, res) => {
     await client.query("BEGIN");
 
     if (req.decoded.userId !== req.body.userId) {
-      return res.status(400).json({ status: "error", msg: "not authorised" });
+      return res.status(403).json({ status: "error", msg: "not authorised" });
     }
 
     await client.query(
@@ -190,7 +190,7 @@ const deleteSession = async (req, res) => {
     );
 
     if (host_id.rows[0].host_id !== req.decoded.userId) {
-      return res.status(400).json({ status: "error", msg: "not authorised" });
+      return res.status(403).json({ status: "error", msg: "not authorised" });
     }
 
     await client.query(
@@ -219,7 +219,7 @@ const joinSession = async (req, res) => {
     await client.query("BEGIN");
 
     if (req.body.userId !== req.decoded.userId) {
-      return res.status(400).json({ status: "error", msg: "not authorised" });
+      return res.status(403).json({ status: "error", msg: "not authorised" });
     }
 
     const host = await client.query(
@@ -229,7 +229,6 @@ const joinSession = async (req, res) => {
     WHERE uuid=$1`,
       [req.body.sessionId]
     );
-
     if (host.rows[0].host_id === req.body.userId) {
       return res.status(400).json({
         status: "error",
@@ -276,7 +275,7 @@ const leaveSession = async (req, res) => {
     await client.query("BEGIN");
 
     if (req.body.userId !== req.decoded.userId) {
-      return res.status(400).json({ status: "error", msg: "not authorised" });
+      return res.status(403).json({ status: "error", msg: "not authorised" });
     }
 
     await client.query(
