@@ -12,3 +12,6 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.roles
     OWNER to wensong;
+
+INSERT INTO roles(role) VALUES('USER')
+INSERT INTO roles(role) VALUES('ADMIN')
