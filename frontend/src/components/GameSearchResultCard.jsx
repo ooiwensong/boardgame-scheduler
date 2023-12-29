@@ -28,7 +28,7 @@ const GameSearchResultCard = (props) => {
           ? parsed.items.item.name[0]._attributes.value
           : parsed.items.item.name._attributes.value,
       );
-      setSelectedGameImage(parsed.items.item.thumbnail._text);
+      setSelectedGameImage(parsed.items.item.image._text);
       setSelectedGameId(parsed.items.item._attributes.id);
       setSelectedGameYear(parsed.items.item.yearpublished._attributes.value);
     } catch (error) {
