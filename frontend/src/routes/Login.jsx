@@ -95,9 +95,9 @@ const Login = () => {
         </Form>
 
         <Card className="mt-5 w-full py-1">
-          <CardContent>
-            <div className="flex p-0 text-center">
-              <p className="justify-center text-center">
+          <CardContent className="p-3">
+            <div className="flex justify-center p-0 text-center">
+              <p>
                 Don't have an account?{" "}
                 <Link to="/register">
                   <span className="font-semibold text-blue-400">Sign up</span>

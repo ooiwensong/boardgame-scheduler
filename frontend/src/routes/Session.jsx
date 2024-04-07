@@ -80,20 +80,17 @@ const Session = () => {
 
   const handleJoinSession = async () => {
     try {
-      const res = await fetch(
-        import.meta.env.VITE_SERVER + "/api/sessions/join-session",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
-            userId: userCtx.userId,
-            sessionId: params.sessionId,
-          }),
+      await fetch(import.meta.env.VITE_SERVER + "/api/sessions/join-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
-      );
+        body: JSON.stringify({
+          userId: userCtx.userId,
+          sessionId: params.sessionId,
+        }),
+      });
       getSingleSession();
     } catch (error) {
       console.log(error.message);
@@ -102,20 +99,17 @@ const Session = () => {
 
   const handleLeaveSession = async () => {
     try {
-      const res = await fetch(
-        import.meta.env.VITE_SERVER + "/api/sessions/leave-session",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
-            userId: userCtx.userId,
-            sessionId: params.sessionId,
-          }),
+      await fetch(import.meta.env.VITE_SERVER + "/api/sessions/leave-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
-      );
+        body: JSON.stringify({
+          userId: userCtx.userId,
+          sessionId: params.sessionId,
+        }),
+      });
       getSingleSession();
     } catch (error) {
       console.log(error.message);
@@ -124,7 +118,7 @@ const Session = () => {
 
   const handleDeleteSession = async () => {
     try {
-      const res = await fetch(import.meta.env.VITE_SERVER + "/api/sessions/", {
+      await fetch(import.meta.env.VITE_SERVER + "/api/sessions/", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -159,7 +153,7 @@ const Session = () => {
           <div id="session-first-half" className="flex pt-5">
             <div
               id="avatar"
-              className="h-[200px] w-[200px] overflow-hidden rounded-full border"
+              className="flex h-[200px] w-[200px] justify-center overflow-hidden rounded"
             >
               <img src={sessionData.game_image} alt={sessionData.game_title} />
             </div>

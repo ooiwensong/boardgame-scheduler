@@ -132,7 +132,7 @@ const SessionCard = (props) => {
         <div className="flex">
           <div
             id="game-image"
-            className="my-auto h-[70px] w-[70px] overflow-hidden rounded-full"
+            className="flex h-[70px] w-[70px] justify-center overflow-hidden rounded"
           >
             <img
               src={session.game_image}
