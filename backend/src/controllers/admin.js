@@ -2,10 +2,12 @@ const db = require("../db/db");
 
 const getAllUsers = async (req, res) => {
   try {
-    const { rows } = await db.query(`
+    const { rows } = await db.query(
+      `
     SELECT *
     FROM users
-    ORDER BY created_at`);
+    ORDER BY created_at`
+    );
 
     res.json(rows);
   } catch (error) {

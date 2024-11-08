@@ -50,9 +50,9 @@ const Session = () => {
 
   const formatted = useFormatDateTime(sessionData);
   const isHost = userCtx.userId === sessionData.host_id;
-  const isGuest = sessionGuests.some(
-    (guest) => guest.guest_id === userCtx.userId,
-  );
+  const isGuest = sessionGuests
+    ? sessionGuests.some((guest) => guest.guest_id === userCtx.userId)
+    : false;
 
   const getSingleSession = async () => {
     try {
@@ -348,7 +348,7 @@ const Session = () => {
               <div className="mb-5 mt-10 text-xl">
                 <i>Guests</i>
               </div>
-              {sessionGuests.length !== 0 ? (
+              {sessionGuests && sessionGuests.length !== 0 ? (
                 sessionGuests.map((guest) => (
                   <UserCard key={guest.guest_id} userId={guest.guest_id} />
                 ))
